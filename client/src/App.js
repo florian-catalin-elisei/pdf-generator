@@ -1,104 +1,46 @@
 import { useState } from "react";
-import axios from "axios";
+import { Form } from "./components/Form/Form.jsx";
 import { saveAs } from "file-saver";
+import axios from "axios";
 import "./App.css";
 
-const App = () => {
+export const App = () => {
   const [name, setName] = useState("");
   const [receiptId, setReceiptId] = useState(0);
   const [price1, setPrice1] = useState(0);
   const [price2, setPrice2] = useState(0);
 
-  const handleChange = (event) => {
-    const { name, value } = event.target;
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
 
-    if (name === "name") {
-      setName(value);
-    } else if (name === "receiptId") {
-      setReceiptId(value);
-    } else if (name === "price1") {
-      setPrice1(value);
-    } else {
-      setPrice2(value);
+    switch (name) {
+      case "name":
+        setName(value);
+        break;
+      case "receiptId":
+        setReceiptId(value);
+        break;
+      case "price1":
+        setPrice1(value);
+        break;
+      case "price2":
+        setPrice2(value);
+        break;
+      default:
+        break;
     }
   };
 
   const handleClick = async (event) => {
     event.preventDefault();
 
-    try {
-      await axios.post("/create-pdf", { name, receiptId, price1, price2 });
+    await axios.post("/create-pdf", { name, receiptId, price1, price2 });
 
-      const response = await axios.get("/get-pdf", {
-        responseType: "arraybuffer",
-      });
+    const { data } = await axios.get("/get-pdf", { responseType: "blob" });
+    const blob = new Blob([data], { type: "application/pdf" });
 
-      const blob = new Blob([response.data], {
-        type: "application/pdf",
-      });
-
-      saveAs(blob, "receipt.pdf");
-    } catch (error) {
-      throw new Error(`Error generating the PDF: ${error.message}`);
-    }
+    saveAs(blob, "receipt.pdf");
   };
 
-  return (
-    <div className="App">
-      <form onSubmit={handleClick}>
-        <h3 className="App-heading">Generate PDF</h3>
-
-        <div className="App-input-container">
-          <input
-            className="App-input"
-            type="text"
-            name="name"
-            placeholder="Name"
-            autoComplete="off"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="App-input-container">
-          <input
-            className="App-input"
-            type="number"
-            name="receiptId"
-            placeholder="Receipt ID"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="App-input-container">
-          <input
-            className="App-input"
-            type="number"
-            name="price1"
-            placeholder="Price 1"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <div className="App-input-container">
-          <input
-            className="App-input"
-            type="number"
-            name="price2"
-            placeholder="Price 2"
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <button type="submit" className="App-button" onClick={handleClick}>
-          Download PDF
-        </button>
-      </form>
-    </div>
-  );
+  return <Form handleChange={handleChange} handleClick={handleClick} />;
 };
-
-export default App;

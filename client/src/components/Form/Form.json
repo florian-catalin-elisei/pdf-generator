@@ -1,0 +1,23 @@
+[
+  {
+    "type": "text",
+    "name": "name",
+    "placeholder": "Name",
+    "autoComplete": "off"
+  },
+  {
+    "type": "number",
+    "name": "receiptId",
+    "placeholder": "Receipt ID"
+  },
+  {
+    "type": "number",
+    "name": "price1",
+    "placeholder": "Price 1"
+  },
+  {
+    "type": "number",
+    "name": "price2",
+    "placeholder": "Price 2"
+  }
+]

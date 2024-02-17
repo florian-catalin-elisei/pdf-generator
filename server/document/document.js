@@ -1,4 +1,4 @@
-const document = ({ name, receiptId, price1, price2 }) => {
+export const document = ({ name, receiptId, price1, price2 }) => {
   const today = new Date();
   const day = today.getDate();
   const month = today.getMonth() + 1;
@@ -124,5 +124,3 @@ const document = ({ name, receiptId, price1, price2 }) => {
     </html>
   `;
 };
-
-module.exports = document;
